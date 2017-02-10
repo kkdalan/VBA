@@ -1,0 +1,106 @@
+
+Sub Word_RPT()
+    
+On Error GoTo ErrHandler:
+  
+    Dim workDir As String
+    workDir = ActiveDocument.Path
+    
+    '新增Word
+    Dim filePath As String
+    Dim newFilePath As String
+    
+    filePath = workDir & "\風險月報_範本.docm"
+    newFilePath = workDir & "\風險月報_" & Format$(Date, "yyyymmdd") & ".docm"
+    
+    Documents.Open FileName:=filePath
+    
+    With ActiveDocument
+        
+        '本文
+         ActiveWindow.ActivePane.View.SeekView = wdSeekMainDocument
+         
+        '==================[      編輯區域       ]=======================
+        
+        '取代文字
+        Call ReplaceText("@Rate@", 0.065)
+        'TODO
+        
+        
+         '表格
+        Call copyExcel2Word(1, 2, 1, "資料.xlsm", 1, 1, 4, 1, 4)
+        'TODO
+        
+        '====================================================
+        
+        .SaveAs FileName:=newFilePath
+        Debug.Print "成功產生" & newFilePath
+       
+    End With
+    
+ErrHandler:
+    If Err.Description <> "" Then
+        MsgBox Err.Description
+    End If
+
+    Set ws = Nothing
+    Set wb = Nothing
+    Application.Quit SaveChanges:=wdDoNotSaveChanges
+
+End Sub
+
+'***************************[ 讀取EXCEL ]*********************************
+Sub copyExcel2Word(wordTableIndex As Integer, wordRowStart As Integer, wordColumnStart As Integer, _
+     excelFile As String, sheetIndex As Integer, rowStart As Integer, rowEnd As Integer, columnStart As Integer, columnEnd As Integer)
+    
+On Error GoTo SubErrHandler
+    
+    Set excelApp = CreateObject("Excel.Application")
+    
+    Dim excelPath As String
+    excelPath = ActiveDocument.Path & "\" & excelFile
+    
+    Set wb = excelApp.Workbooks.Open(excelPath)
+    Set ws = wb.sheets(sheetIndex)
+    excelApp.Visible = False
+    
+      With ActiveDocument.Tables(wordTableIndex)
+          For r = rowStart To rowEnd
+              For c = columnStart To columnEnd
+                  .Cell(wordRowStart + r - rowStart, wordColumnStart + c - columnStart).Range.Text = ws.Cells(r, c).Text
+              Next
+          Next
+      End With
+      
+SubErrHandler:
+
+    If Err.Description <> "" Then
+        MsgBox Err.Description
+        excelApp.Quit
+    End If
+    
+    Set ws = Nothing
+    Set wb = Nothing
+    excelApp.Quit
+    Set excelApp = Nothing
+
+End Sub
+
+'***************************[ 取代文字 ]***********************************
+'使用 Replacement 物件
+Sub ReplaceText(oldStr As Variant, newStr As Variant)
+  
+   With Selection.Find
+    .Text = oldStr
+    .Replacement.Text = newStr
+    .MatchCase = True
+    .Replacement.ClearFormatting
+    .ClearFormatting
+    
+    '全部取代
+    .Execute Replace:=wdReplaceAll, Forward:=True, Wrap:=wdFindContinue
+   End With
+   
+End Sub
+
+
