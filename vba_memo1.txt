@@ -1,0 +1,349 @@
+Sub 刪除列()
+
+     Dim myRowCount As Integer, i As Integer
+    
+     myRowCount = Range("A1").CurrentRegion.Rows.Count
+    
+     i = 1
+     
+     For i = 1 To myRowCount
+     
+        If Len(Cells(i, 1).Text) > 3 Then
+'
+           Debug.Print Rows(i).Text
+           Rows(i).Delete
+      
+        End If
+     Next i
+     
+End Sub
+
+Sub get_file()
+    fs = Dir("C:\DOC_MRLC\01_BADocument\04_UserInterface\10_Maintenance\*.*")
+    Do Until fs = ""
+        r = r + 1
+        Cells(r, 1) = fs
+        fs = Dir
+    Loop
+End Sub
+
+Sub dispatch()
+
+    Dim i As Integer
+
+    Dim caseType(25) As String
+            
+    caseType(0) = "GLS0101Limit_Setting"
+    caseType(1) = "GCY0201Counterparty"
+    caseType(2) = "GCU0202Country"
+    caseType(3) = "GIT0203Industry"
+    caseType(4) = "GSE0204Sub_Entity"
+    caseType(5) = "GTD0205Trader"
+    caseType(6) = "GPT0206Product_Type"
+    caseType(7) = "GCC0207Currency"
+    caseType(8) = "GAB0208Accounting_Book"
+    caseType(9) = "GFL0209Portfolio"
+    caseType(10) = "GBC0210Branch"
+    caseType(11) = "GMN0301Main_Interface_Report_Name_Enquiry"
+    caseType(12) = "GMD0302Main_Interface_Report_Description"
+    caseType(13) = "GMC0303Main_Interface_Counterparty_Enquiry"
+    caseType(14) = "GRL0304Rules_Limit_Rule_Setting"
+    caseType(15) = "GRI0305Rules_Sub_Limit_Rule_Setting"
+    caseType(16) = "GRS0306Rules_Rules_Selected"
+    caseType(17) = "GTR0307Threshold_Range"
+    caseType(18) = "GTJ0308Threshold_Judge"
+    caseType(19) = "GTP0309Threshold_Period"
+    caseType(20) = "GTF0310Threshold_Final_Rules"
+    caseType(21) = "GRU0311Result"
+    caseType(22) = "GCB0401Collateral_Builder_and_Linkage"
+    caseType(23) = "GCM0402Collateral_Monitor"
+    caseType(24) = "GFC0501Filter_CCF_Table_RW"
+
+
+        
+    Dim shortCode As String
+    Dim name As String
+    Dim num As String
+    Dim s As Integer
+    s = 0
+    
+    Dim classCode As String
+    classCode = "G"
+    
+    
+    Dim isColor As Boolean
+    isColor = True
+        
+
+   For k = 0 To 24
+   
+     For j = 1 To 9
+   
+      shortCode = Left(caseType(k), 3)
+      num = Mid(caseType(k), 4, 4)
+      name = Right(caseType(k), Len(caseType(k)) - 7)
+      
+     i = j Mod 9
+     If i = 0 Then i = 9
+     
+     Select Case i
+       Case 1
+         Cells(i + s, 1) = classCode & "1" & num & "1"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "經辦新增" & name & "建檔登錄階段"
+         Cells(i + s, 4) = shortCode & "01"
+       Case 2
+         Cells(i + s, 1) = classCode & "1" & num & "2"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "經辦修改" & name & "建檔登錄階段"
+         Cells(i + s, 4) = shortCode & "03"
+       Case 3
+         Cells(i + s, 1) = classCode & "1" & num & "3"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "經辦刪除" & name & "建檔登錄階段"
+         Cells(i + s, 4) = shortCode & "05"
+       Case 4
+         Cells(i + s, 1) = classCode & "2" & num & "1"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "主管新增" & name & "審核階段"
+         Cells(i + s, 4) = "核准:00、退件:01"
+       Case 5
+         Cells(i + s, 1) = classCode & "2" & num & "2"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "主管修改" & name & "審核階段"
+         Cells(i + s, 4) = "核准:00、退件:01"
+       Case 6
+         Cells(i + s, 1) = classCode & "2" & num & "3"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "主管刪除" & name & "審核階段"
+         Cells(i + s, 4) = "核准:00、退件:01"
+       Case 7
+         Cells(i + s, 1) = classCode & "D" & num & "1"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "DB建立" & name & "資料階段"
+         Cells(i + s, 4) = shortCode & "02"
+       Case 8
+         Cells(i + s, 1) = classCode & "D" & num & "2"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "DB修改" & name & "資料階段"
+         Cells(i + s, 4) = shortCode & "04"
+       Case 9
+         Cells(i + s, 1) = classCode & "D" & num & "3"
+         Cells(i + s, 2) = "submit"
+         Cells(i + s, 3) = "DB刪除" & name & "資料階段"
+         Cells(i + s, 4) = shortCode & "06"
+       End Select
+       
+    Next
+        
+    s = s + 9
+    
+    
+  Next
+  
+    
+End Sub
+
+
+Sub 一般流程()
+
+Dim i As Integer
+
+    Dim caseType(25) As String
+    
+    caseType(0) = "GLS0101Limit_Setting"
+    caseType(1) = "GCY0201Counterparty"
+    caseType(2) = "GCU0202Country"
+    caseType(3) = "GIT0203Industry"
+    caseType(4) = "GSE0204Sub_Entity"
+    caseType(5) = "GTD0205Trader"
+    caseType(6) = "GPT0206Product_Type"
+    caseType(7) = "GCC0207Currency"
+    caseType(8) = "GAB0208Accounting_Book"
+    caseType(9) = "GFL0209Portfolio"
+    caseType(10) = "GBC0210Branch"
+    caseType(11) = "GMN0301Main_Interface_Report_Name_Enquiry"
+    caseType(12) = "GMD0302Main_Interface_Report_Description"
+    caseType(13) = "GMC0303Main_Interface_Counterparty_Enquiry"
+    caseType(14) = "GRL0304Rules_Limit_Rule_Setting"
+    caseType(15) = "GRI0305Rules_Sub_Limit_Rule_Setting"
+    caseType(16) = "GRS0306Rules_Rules_Selected"
+    caseType(17) = "GTR0307Threshold_Range"
+    caseType(18) = "GTJ0308Threshold_Judge"
+    caseType(19) = "GTP0309Threshold_Period"
+    caseType(20) = "GTF0310Threshold_Final_Rules"
+    caseType(21) = "GRU0311Result"
+    caseType(22) = "GCB0401Collateral_Builder_and_Linkage"
+    caseType(23) = "GCM0402Collateral_Monitor"
+    caseType(24) = "GFC0501Filter_CCF_Table_RW"
+        
+    Dim classCode As String
+    classCode = "G"
+    Dim shortCode As String
+    Dim name As String
+    Dim num As String
+    
+    Dim 序號 As String
+    Dim 案件 As String
+    Dim 主管序號 As String
+    Dim 經辦序號 As String
+    Dim DB序號 As String
+       
+    Dim s  As Integer
+    s = 0
+    
+    For k = 0 To 24
+     
+       i = k + 1
+     
+       For j = 1 To 3
+   
+           shortCode = Left(caseType(k), 3)
+           num = Mid(caseType(k), 4, 4)
+           name = Right(caseType(k), Len(caseType(k)) - 7)
+      
+          序號 = shortCode & "0" & j
+          案件 = shortCode
+          主管序號 = classCode & "1" & num & j
+          經辦序號 = classCode & "2" & num & j
+          DB序號 = classCode & "D" & num & j
+      
+          Cells(i + s, 1) = 序號
+          If j = 1 Then Cells(i + s, 2) = "主流程"
+          If j = 2 Then Cells(i + s, 2) = "副流程"
+          If j = 3 Then Cells(i + s, 2) = "副流程"
+          Cells(i + s, 3) = 案件
+          Cells(i + s, 4) = 主管序號
+          Cells(i + s, 5) = 經辦序號
+          Cells(i + s, 6) = DB序號
+          Cells(i + s, 7) = "CLOSEOUT"
+          
+          If j = 1 Then s = s + 1
+          If j = 2 Then s = s + 1
+               
+       Next
+       
+    Next
+    
+End Sub
+
+
+Sub SQL連線()
+
+    '建立連線
+    Dim conn As New ADODB.Connection
+    conn.ConnectionString = "Driver={iSeries Access ODBC Driver}" _
+                          & ";SERVER=172.17.214.199" _
+                          & ";DATABASE=MRLC" _
+                          & ";UID=MRLC" _
+                          & ";PWD=MRLC1313" _
+                          & ";Connect Timeout=20;"
+    conn.Open
+    
+    '建立資料集
+    Dim rs As New Recordset
+    Set rs.ActiveConnection = conn
+    
+    'SQL DML========================================================================
+'    Dim i As Integer
+'    For i = 1 To 20
+'        sqlstr = "INSERT INTO Store_Information (Store_name,Sales)" & _
+'                                               "VALUES('Tom'," & i * 100 & ");"
+'        conn.Execute sqlstr
+'    Next i
+    
+    'SQL DQL=========================================================================
+    sqlstr = "SELECT * FROM TB_FUNCTION;"
+    rs.Open sqlstr
+    
+    '清除EXCEL
+    Call ClearRangeInAllSheets
+    
+    '將資料集的資料寫入EXCEL
+    Dim Row_No As Integer
+    Dim Column_No As Integer
+    
+    For Column_No = 1 To rs.Fields.Count
+       Cells(1, Column_No) = rs.Fields(Column_No - 1).name
+    Next Column_No
+    
+    Row_No = 2
+    While rs.EOF = False
+       For Column_No = 1 To rs.Fields.Count
+            Dim FieldName As String
+            FieldName = Cells(1, Column_No)
+            Cells(Row_No, Column_No) = rs.Fields(FieldName)
+       Next Column_No
+       Row_No = Row_No + 1
+       rs.MoveNext
+    Wend
+                                                                                
+    '清除連線物件
+    rs.Close
+    conn.Close
+    Set rs = Nothing
+    Set conn = Nothing
+   
+    MsgBox "Query OK!"
+                                                                                
+End Sub
+
+Sub ClearRangeInAllSheets()
+    Dim MyRange As String
+    MyRange = "A1:IV65536"
+       
+    'Define which worksheet you want to work on
+     With ActiveSheet
+         .AutoFilterMode = False
+         .Range(MyRange).EntireRow.Hidden = False
+         .Range(MyRange).EntireColumn.Hidden = False
+         '.Range(MyRange).ClearContents 'This deletes only cell contents
+         .Range(MyRange).Clear 'This deletes cell contents and formatting
+         .Range("A1").Select 'move to the first cell
+     End With
+        
+    'MsgBox "Clear old datas => OK!"
+    
+End Sub
+
+Sub 尋找案件狀態()
+    Dim r As Integer
+    Dim str As String
+    
+    r = 1
+    
+    For r = 1 To 10
+        str = Cells(r, 1).Text
+        
+        Select Case str
+            Case "d"
+                Range("A1").Interior.Color = RGB(255, 246, 143)
+              
+            Case "a"
+             
+            Case Else
+         
+        End Select
+        
+    Next
+    
+   MsgBox "ok!"
+    
+End Sub
+
+'***************************[ 輸出文字檔 ]***********************************
+Sub WriteTXT()
+  
+  Dim fn1 As Integer, i As Long
+  ChDrive Left(ThisWorkbook.Path, 2): ChDir ThisWorkbook.Path
+  fn1 = FreeFile
+  
+  Open "test.txt" For Output As fn1
+  
+  For i = 1 To 65535
+    Print #fn1, Cells(i, 1)
+  Next
+  
+  Close fn1
+
+End Sub
