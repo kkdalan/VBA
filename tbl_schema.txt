@@ -1,0 +1,43 @@
+'We create each SQL command from table schema worksheets in Excel
+'by VBA subroutine to .txt files.
+
+Sub 產生SQL(tblName As String)
+
+    Dim wb As Workbook: Set wb = ThisWorkbook
+    Dim ws As Worksheet: Set ws = wb.Sheets(tblName)
+   
+    Dim fn1 As Integer: fn1 = FreeFile
+    Dim FilePath As String: FilePath = ThisWorkbook.Path & "\" & tblName & ".txt"
+    Open FilePath For Output As fn1
+   
+    Dim str As String
+    str = "CREATE TABLE " & tblName & " ( "
+    Print #fn1, str
+
+    Dim r As Integer: r = 2
+    While ws.Cells(r, 1) <> ""
+   
+        str = "   " & ws.Cells(r, 1) & " " & ws.Cells(r, 3)
+        If ws.Cells(r, 5) = "F" Then str = str & " NOT NULL "
+        If ws.Cells(r, 4) = "T" Then str = str & " PRIMARY KEY "
+        If ws.Cells(r + 1, 1) <> "" Then str = str & " , "
+        Print #fn1, str
+       
+        r = r + 1
+    Wend
+   
+    str = ");"
+    Print #fn1, str
+   
+    Close fn1
+    Debug.Print "產生SQL檔: " & FilePath
+   
+End Sub
+
+Sub 產生Table_Schema()
+
+    For i = 1 To Sheets.Count
+        Call 產生SQL(Sheets(i).Name)
+    Next
+   
+End Sub
