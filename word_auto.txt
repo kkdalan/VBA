@@ -10,8 +10,8 @@ On Error GoTo ErrHandler:
     Dim filePath As String
     Dim newFilePath As String
     
-    filePath = workDir & "\風險月報_範本.docm"
-    newFilePath = workDir & "\風險月報_" & Format$(Date, "yyyymmdd") & ".docm"
+    filePath = workDir & "\報表範本.docm"
+    newFilePath = workDir & "\報表_" & Format$(Date, "yyyymmdd") & ".docm"
     
     Documents.Open FileName:=filePath
     
