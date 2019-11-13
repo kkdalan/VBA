@@ -1,0 +1,60 @@
+
+Public Sub 匯出圖片()
+    
+    Dim currentDoc As Document
+    Dim currentShape As InlineShape
+    Dim strOutFileDir As String
+    Dim strOutFilePath As String
+    Dim imageName As String
+    Dim i As Long
+  
+    Set currentDoc = ActiveDocument
+    strOutFileDir = currentDoc.Path & "\Figures"
+    
+    CreateFolder strOutFileDir
+
+    i = 1
+    For Each currentShape In currentDoc.InlineShapes
+        imageName = GetFigureName(currentShape)
+        strOutFilePath = strOutFileDir & "\" & imageName & ".emf"
+        If InStr(imageName, "Figure") > 0 Then
+            WriteImageFile strOutFilePath, currentShape
+            Debug.Print "[" & i & "] 匯出:" & strOutFilePath
+            i = i + 1
+        End If
+    Next currentShape
+
+    MsgBox "[完成] 匯出 " & i - 1 & " 個項目"
+
+End Sub
+
+
+Private Function GetFigureName(imageShape As InlineShape) As String
+    Set oRng = imageShape.Range
+    oRng.Collapse wdCollapseEnd
+    oRng.Move wdParagraph, 1
+    oRng.MoveEndUntil Cset:=Chr(13), Count:=wdForward
+    imageName = Trim(Replace(oRng, Chr(30), "-"))
+    GetFigureName = imageName
+End Function
+
+
+Private Sub WriteImageFile(strOutFilePath As String, imageShape As InlineShape)
+    Dim vData() As Byte
+    Dim lWritePos As Long
+    Open strOutFilePath For Binary Access Write As #1
+    vData = imageShape.Range.EnhMetaFileBits
+    lWritePos = 1
+    Put #1, lWritePos, vData
+    Close #1
+End Sub
+ 
+ 
+Private Sub CreateFolder(strOutFileDir As String)
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FolderExists(strOutFileDir) Then
+        fso.DeleteFolder strOutFileDir
+    End If
+    fso.CreateFolder strOutFileDir
+End Sub
+
